@@ -34,3 +34,35 @@ def paginating(data: list, page_size: int, total_page: int) -> None:
         # если требуемая страница за рамками существующих
         if requested_page > total_page:
             print('Конец справочника')
+
+
+def search_one(data: list) -> None:
+    """Функция поиска по одному или нескольким параметрам"""
+
+    user_choice = (input('Введите искомые параметры через запятую')).lower()
+    # удаляем пробелы в начале и конце
+    user_choice = user_choice.strip()
+    # удаляем пробелы после запятой
+    user_choice = user_choice.replace(', ', ',')
+    # удаляем пробелы перед запятой
+    user_choice = user_choice.replace(' ,', ',')
+    # Создаем список ключевых слов из запроса пользователя деля по запятой
+    search_data = user_choice.split(',')
+    result = []
+
+    # цикл в котором мы сравниваем значения каждого абонента
+    # в нижнем регистре со списком ключевых слов
+    # и при полном совпадении добавляем его в result
+    for row in data:
+        count_match = 0
+        for value in search_data:
+            if value in [x.lower() for x in row.values()]:
+                count_match += 1
+        if count_match == len(search_data):
+            result.append(row)
+
+    # Выводим результат
+    if len(result) == 0:
+        print('Абонента с такими параметрами нет')
+    # json.dumps для более красивого вывода
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=4))
