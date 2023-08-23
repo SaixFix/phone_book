@@ -25,21 +25,24 @@ def paginating(data: list, page_size: int, total_page: int) -> None:
 
         # показываем страницы в зависимости от запрошенных
         if requested_page == 1:
-            print(data[0:page_size])
+            print(json.dumps(data[0:page_size], ensure_ascii=False, indent=4))
         if requested_page == 2:
-            print(data[page_size:requested_page * page_size])
+            print(json.dumps(data[page_size:requested_page * page_size], ensure_ascii=False, indent=4))
         if requested_page >= 3:
-            print(data[page_after_3:(page_after_3 + page_size)])
+            print(json.dumps(data[page_after_3:(page_after_3 + page_size)], ensure_ascii=False, indent=4))
 
         # если требуемая страница за рамками существующих
         if requested_page > total_page:
             print('Конец справочника')
 
 
-def search_one(data: list) -> None:
-    """Функция поиска по одному или нескольким параметрам"""
+def search(data: list[dict]) -> list[dict]:
+    """
+    Функция поиска по одному или нескольким параметрам.
+    Получает базу(список словарей), возвращает результат поиска
+    """
 
-    user_choice = (input('Введите искомые параметры через запятую')).lower()
+    user_choice = (input('Введите искомые параметры через запятую\n')).lower()
     # удаляем пробелы в начале и конце
     user_choice = user_choice.strip()
     # удаляем пробелы после запятой
@@ -64,5 +67,31 @@ def search_one(data: list) -> None:
     # Выводим результат
     if len(result) == 0:
         print('Абонента с такими параметрами нет')
+
     # json.dumps для более красивого вывода
-    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=4))
+    print(json.dumps(result, ensure_ascii=False, indent=4))
+
+    return result
+
+
+def redact_one(template: dict, result_search: list[dict]):
+    """
+    Функция для редактирования 1ой записи и затем замены ее в общей базе.
+    Получает шаблон записи, запись для редактирования.
+    """
+
+    # Выбираем требуемый ключ
+    key_choice = int(input(
+        f'Введите номер параметра для редактирования\n'
+        f'{json.dumps(template, ensure_ascii=False, indent=4)}\n'
+    ))
+
+    # Вводим новое значение
+    new_value = input('Введите новое значение\n')
+    # Переписываем старое значение на новое по выбранному ключу
+    result_search[0][list(template.keys())[key_choice]] = new_value
+
+    print(
+        f'Данные изменены'
+        f'{json.dumps(result_search, ensure_ascii=False, indent=4)}'
+    )
