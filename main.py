@@ -1,5 +1,3 @@
-import json
-
 from work_with_file import add_new_data, read_all, rewrite_data
 from utils import paginating, search, redact_one
 

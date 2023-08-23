@@ -74,7 +74,7 @@ def search(data: list[dict]) -> list[dict]:
     return result
 
 
-def redact_one(template: dict, result_search: list[dict]):
+def redact_one(template: dict, result_search: list[dict]) -> None:
     """
     Функция для редактирования 1ой записи и затем замены ее в общей базе.
     Получает шаблон записи, запись для редактирования.
