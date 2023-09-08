@@ -27,7 +27,8 @@ def main():
         for row in data:
             data[row]: str = input(f'{row} ')
 
-        add_new_data(data)
+        all_data.append(data)
+        rewrite_data(all_data)
 
     if user_choice == '2':
         # можно установить размер страницы больше 1
