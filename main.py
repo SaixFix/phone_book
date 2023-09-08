@@ -1,10 +1,12 @@
-from work_with_file import add_new_data, read_all, rewrite_data
+from class_person import Person
+from work_with_file import read_all, rewrite_data
 from utils import paginating, search, redact_one
+from dataclasses import asdict
 
 
 def main():
     # вся информация из справочника
-    all_data: list = read_all()
+    all_data: list[dict] = read_all()
 
     # шаблон
     data: dict = {

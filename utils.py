@@ -1,7 +1,18 @@
 import json
 
 
-def paginating(data: list, page_size: int, total_page: int) -> None:
+def converter_to_str(dict_data: dict) -> str:
+    """
+    Функция принимает словарь, перебирает его
+     по паре ключ, значение и добавляет переносы строки
+    """
+    str_data = '\n'
+    for k, v in dict_data.items():
+        str_data += f"{''.join(k)}: {''.join(v)}, \n"
+    return str_data
+
+
+def paginating(data: list[dict], page_size: int, total_page: int) -> None:
     """
     Функция разбивки базы на страницы
      и вывода требуемой через print
@@ -25,11 +36,16 @@ def paginating(data: list, page_size: int, total_page: int) -> None:
 
         # показываем страницы в зависимости от запрошенных
         if requested_page == 1:
-            print(json.dumps(data[0:page_size], ensure_ascii=False, indent=4))
+            # применяем функцию десериализации словарей к каждому из требуемого страничного среза
+            page = list(map(converter_to_str, data[0:page_size]))
+            # выводим список в виде строки
+            print(''.join(page))
         if requested_page == 2:
-            print(json.dumps(data[page_size:requested_page * page_size], ensure_ascii=False, indent=4))
+            page = list(map(converter_to_str, data[page_size:requested_page * page_size]))
+            print(''.join(page))
         if requested_page >= 3:
-            print(json.dumps(data[page_after_3:(page_after_3 + page_size)], ensure_ascii=False, indent=4))
+            page = list(map(converter_to_str, data[page_after_3:(page_after_3 + page_size)]))
+            print(''.join(page))
 
         # если требуемая страница за рамками существующих
         if requested_page > total_page:
@@ -68,8 +84,10 @@ def search(data: list[dict]) -> list[dict]:
     if len(result) == 0:
         print('Абонента с такими параметрами нет')
 
-    # json.dumps для более красивого вывода
-    print(json.dumps(result, ensure_ascii=False, indent=4))
+    # применяем функцию десериализации словарей
+    output = list(map(converter_to_str, result))
+    # выводим список в виде строки
+    print(''.join(output))
 
     return result
 
@@ -91,7 +109,10 @@ def redact_one(template: dict, result_search: list[dict]) -> None:
     # Переписываем старое значение на новое по выбранному ключу
     result_search[0][list(template.keys())[key_choice]] = new_value
 
+    # применяем функцию десериализации словарей
+    output = list(map(converter_to_str, result_search))
+    # выводим список в виде строки
     print(
         f'Данные изменены'
-        f'{json.dumps(result_search, ensure_ascii=False, indent=4)}'
+        f'{"".join(output)}'
     )

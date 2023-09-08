@@ -11,16 +11,6 @@ def read_all() -> list[dict]:
         return data
 
 
-def add_new_data(data: dict) -> None:
-    """
-    Получаем словарь,
-    Добавляем новую строчку в файл справочника
-    """
-    with open('./telbook.json', 'a', encoding='utf-8') as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
-    return print('Абонент добавлен', data)
-
-
 def rewrite_data(new_all_data: list[dict]) -> None:
     """
     Перезаписываем файл.
